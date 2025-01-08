@@ -61,7 +61,7 @@ export default function AboutPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 1 }}
           >
-            Whether you&apos;re a skincare novice or a makeup pro, we're here to guide you through the ever-evolving world of beauty. Join us on this exciting journey to discover your most radiant self!
+            Whether you&apos;re a skincare novice or a makeup pro, we&apos;re here to guide you through the ever-evolving world of beauty. Join us on this exciting journey to discover your most radiant self!
           </motion.p>
         </div>
       </motion.div>

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: BlogPostParams) {
 
   return {
     title: post.title,
-    description: post.excerpt, // Assuming `post` has an `excerpt` field
+    description: post.content, 
   };
 }
 
