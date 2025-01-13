@@ -8,6 +8,7 @@ interface BlogPostParams {
   params: {
     slug: string;
   };
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 export async function generateMetadata({ params }: BlogPostParams) {
