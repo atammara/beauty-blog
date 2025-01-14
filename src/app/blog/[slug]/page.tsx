@@ -8,10 +8,10 @@ interface BlogPostParams {
   params: {
     slug: string;
   };
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Record<string, string>;
 }
 
-export async function generateMetadata({ params }: BlogPostParams) {
+export async function generateMetadata({ params }: BlogPostParams): Promise<{ title: string; description?: string }> {
   const post = await getBlogPost(params.slug);
 
   if (!post) {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: BlogPostParams) {
 
   return {
     title: post.title,
-    description: post.content, 
+    description: post.content.substring(0, 160), // Ensure description is concise
   };
 }
 
@@ -33,14 +33,14 @@ export default async function BlogPost({ params }: BlogPostParams) {
 
   return (
     <article className="max-w-3xl mx-auto">
-      {/* Title and metadata */}
-      <div className="mb-8">
+      {/* Title and Metadata */}
+      <header className="mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">{post.title}</h1>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 text-gray-600">
+        <div className="flex items-center justify-between text-gray-600">
+          <div className="flex items-center gap-4">
             <span>{post.category}</span>
             <span>•</span>
-            <time>
+            <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -50,35 +50,41 @@ export default async function BlogPost({ params }: BlogPostParams) {
           </div>
           <FavoriteButton postId={post.id} />
         </div>
-      </div>
+      </header>
 
       {/* Featured Image */}
-      <div className="relative aspect-video mb-8">
-        <Image
-          src={post.image}
-          alt={post.title}
-          fill
-          className="object-cover rounded-lg"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-      </div>
+      {post.image && (
+        <div className="relative aspect-video mb-8">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            className="object-cover rounded-lg"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority // Optimizes the loading of the image
+          />
+        </div>
+      )}
 
       {/* Post Content */}
-      <div className="prose prose-lg max-w-none mb-12">
-        {(post.content as string).split('\n').map((paragraph: string, index: number) => (
+      <section className="prose prose-lg max-w-none mb-12">
+        {post.content.split('\n').map((paragraph, index) => (
           <p key={index} className="mb-4">
             {paragraph}
           </p>
         ))}
-      </div>
+      </section>
 
       {/* Comments Section */}
       <CommentSection postSlug={params.slug} />
 
-      {/* Placeholder for related posts */}
+      {/* Related Posts Section (Placeholder) */}
       <section className="mt-12">
         <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
-        {/* Add related posts logic here */}
+        <div>
+          {/* Logic for fetching and displaying related posts goes here */}
+          <p className="text-gray-600">Coming soon...</p>
+        </div>
       </section>
     </article>
   );
